@@ -1,0 +1,503 @@
+%
+\documentclass[aps,amsmath,amssymb,prb,superscriptaddress,longtable,preprint,fleqn]{revtex4}
+
+\usepackage{graphicx}% Include figure files
+\usepackage{dcolumn}% Align table columns on decimal point
+\usepackage{bm}% bold math
+
+
+\renewcommand{\labelenumi}{\theenumi}
+\usepackage{color}
+\usepackage{amssymb}
+
+\begin{document}
+
+\renewcommand{\theenumi}{\Roman{enumi}}%
+\renewcommand{\theenumi}{(\roman{enumi})}%
+
+\setlength{\tabcolsep}{0.5em}
+
+\title{X-ray diffraction of Heusler-like phases}
+
+
+\author{P. LeClair}
+
+
+
+\maketitle
+\tableofcontents
+\clearpage 
+
+\section{\protect{$X_2YZ$} phases}
+
+\subsection{\protect{$L2_1$} structure}
+
+Heusler-like compounds $X_2YZ$ can crystallize in a number of structures. In particular we are interested in $X_a$ and $L2_1$, as well as the $A2$ and $B2$ phases resulting from disorder. Start with the $L2_1$ structure, space group 225.\cite{itc} In general, this structure has the following conditions on the allowed $hkl$ indices for all sites:
+
+\begin{align*}
+ &h+k, h+l, k+l=2n\\
+ &0kl: k,l=2n\\
+ &hhl: h+l=2n\\
+ &h00: h=2n
+\end{align*}
+
+These rules reproduce the fact that for a face-centered cubic structure, we know there are no mixed odd/even indices (h,k,l are all odd or all even). We will populate the Wyckoff sites as follows:
+
+\begin{table}[htdp]
+\begin{center}
+\caption{Wyckoff sites for $L2_1$ $X_2YZ$ Heuslers}
+\begin{tabular}{cccc}
+site & position & atom & additional conditions on $hkl$\\
+\hline
+4a & $000$ & Z & none\\
+4b & $\frac{1}{2}\frac{1}{2}\frac{1}{2}$ & Y & none \\
+8c & $\frac{1}{4}\frac{1}{4}\frac{1}{4}$, $\frac{1}{4}\frac{1}{4}\frac{3}{4}$ & X & $h=2n$\\
+\end{tabular}
+\end{center}
+\label{wycoff.l21}
+\end{table}%
+
+Note that the 8c site contains 2 atoms, and it only has reflections for $h=2n$. In general, the structure factor is calculated\cite{warren69} for planes $(hkl)$ and vectors $(u,v,w)$
+
+\begin{equation}
+F_{hkl} = \sum_1^N f_n e^{2\pi i\left(hu_n + kv_n + + lw_n\right)}
+\end{equation}
+
+\noindent where the $f_n$ are the atomic scattering factors for the $n^{\text{th}}$ atom located at position $(u_n,v_n,w_n)$. If all four sites are occupied as above,
+
+\begin{align}
+F_{hkl} &= f_z + f_y e^{2\pi i\left(\frac{h+k+l}{2}\right)} + f_x e^{2\pi i\left(\frac{h+k+l}{4}\right)} + f_x e^{2\pi i\left(\frac{h+k+3l}{4}\right)} \nonumber \\
+&= f_z + f_y e^{\pi i\left(h+k+l\right)} + f_x e^{\frac{1}{2}\pi i\left(h+k+l\right)} + f_x e^{\frac{1}{2}\pi i\left(h+k+3l\right)} \label{eq:sf}
+\end{align}
+
+Now we note some useful relationships
+
+\begin{align}
+e^{i\pi(\text{odd integer})} &= -1\\
+e^{i\pi(\text{even integer})} &= 1\\
+e^{i\pi/2} &= i\\
+e^{3i\pi/2} &= -i\\
+e^{n\pi i} &= e^{-n\pi i} \qquad n=\text{integer}
+\end{align}
+
+It is clear that apart from the factor of $i\pi$, the only issue is whether the rest of the exponent is an even or odd integer or a half integer. We know that the indices cannot be mixed given the face-centered structure, so they are all even or all odd. If they are all even, their sum is even, if they are all odd, their sum is odd. That makes the exponential in the second term in Eq.~\ref{eq:sf} trivial. For the third and fourth terms, we need to know if $(h+k+l)/2$, or equivalently $(h+k+3l)/2$, is even or odd. 
+
+There are four possibilities in total: for $h+k+l$ even, we could have $h+k+l=4n$ or $h+k+l=4n+2$, where $n$ is an integer. The former series has $(h+k+l)/2$ even, the latter has it odd. For $h+k+l$ odd, we could have $h+k+l=4n+1$ or $h+k+l=4n+3$, and in both cases $(h+k+l)/2$ is odd. We will examine each case explicitly. 
+
+For $h+k+l$ even, we can examine separately the 3 exponential factors in Eq.~\ref{eq:sf}. If $h+k+l$ is even, the exponential in the second term is always 1.
+
+\begin{align}
+ e^{\pi i\left(\text{h+k+l}\right)} = e^{\pi i\left(\text{\text{even integer}}\right)} = 1
+\end{align}
+
+This result is independent of what the sum of $h+k+l$ is, it need only be even. If $h+k+l$ is even and $h+k+l=4n$, the exponential in the third term in Eq.~\ref{eq:sf} gives
+
+\begin{equation}
+e^{\frac{1}{2}\pi i\left(h+k+l\right)} = e^{2n\pi i} = 1
+\end{equation}
+
+\noindent If $h+k+l$ is even and $h+k+l=4n+2$, the exponential in the third term in Eq.~\ref{eq:sf} gives
+
+\begin{equation}
+e^{\frac{1}{2}\pi i\left(h+k+l\right)} = e^{n\pi i \left(2n+1\right)} = -1
+\end{equation}
+
+For the exponential in the fourth term, the result is exactly the same as the third term: whether it is $h+k+l$ or $h+k+3l$ that is equal to $4n$ or $4n+2$ does not change the result. Thus, for $hkl$ all even, there are two types of reflections. Using the results above and Eq.~\ref{eq:sf},
+
+\begin{align}
+F_1 &= f_z + f_y + 2f_x \qquad \text{indices}\, h+k+l = 4n\\
+F_2 &= f_z+ f_y - 2f_x \qquad \text{indices}\,  h+k+l = 4n+2
+\end{align}
+
+Next we consider $hkl$ all odd. In this case, $h+k+l$ must be odd as well. For this space group, specifically for the 8c sites, we require $h=4n$ for reflections to be present.\cite{itc} If all the indices are odd, $h\neq4n$, and the 8c sites give no reflections. This means the third and fourth terms in Eq.~\ref{eq:sf} are zero from the symmetry of the space group when $hkl$ are all odd. Thus, we only need consider the second term, and need only the condition that $hkl$ are all odd:
+
+\begin{align}
+e^{\pi i\left(h+k+l\right)} = -1
+\end{align}
+
+Thus, for $h+k+l$ odd, there is only one type of reflection, $F_3 = f_z-f_y$, for a total of 3 distinct reflection types for the $L2_1$ structure.
+
+\begin{align}
+F_1 &= f_z + f_y + 2f_x \qquad &hkl\,\text{even}, h+k+l = 4n\\
+F_2 &= f_z+ f_y - 2f_x \qquad &hkl\,\text{even}, h+k+l = 4n+2\\
+F_3 &= f_z - f_y \qquad &hkl\,\text{odd}
+\end{align}
+
+Note that the scattering intensity is proportional to $|F_i|^2$, and that several other factors are involved in calculating realistic x-ray diffraction intensities. 
+
+Let us consider a few common planes and determine what structure factors are involved, taking into account the general restrictions listed on $hkl$ as well.
+
+\begin{table}[htdp]
+\begin{center}
+\caption{relevant structure factor for low index peaks}
+\begin{tabular}{ccccc}
+$hkl$ & $h+k+l$ & $h^2+k^2+l^2$ & structure factor & multiplicity \\
+\hline
+100 & 1 & 1 & forbidden  & 6\\
+110 & 2 & 2 & forbidden & 12 \\
+111 & 3 & 3 & $F_3$ & 8\\
+200 & 2 & 4 & $F_2$ & 6\\
+220 & 4 & 8 & $F_1$ & 12\\
+311 & 5 & 11 & $F_3$ & 24\\
+222 & 6 & 12 & $F_2$ & 8\\
+400 & 4 & 15 & $F_1$& 6
+\end{tabular}
+\end{center}
+\label{low-index-l21}
+\end{table}%
+
+\clearpage 
+
+\subsection{\protect{$X_a$} structure}
+
+Now we move on to the $X_a$ structure, space group 216. This space group has the same general conditions on the allowed $hkl$ indices as space group 225:
+
+\begin{align*}
+ &h+k, h+l, k+l=2n\\
+ &0kl: k,l=2n\\
+ &hhl: h+l=2n\\
+ &h00: h=2n
+\end{align*}
+
+As before, we know there are no mixed odd/even indices (h,k,l are all odd or all even). We will populate the Wyckoff sites as follows for a generic compound $ABCD$ (the site assignments for $X_2YZ$ compounds vary in the literature).
+
+\begin{table}[htdp]
+\begin{center}
+\caption{Wyckoff sites for $X_a$ $X_2YZ$ Heuslers}
+\begin{tabular}{cccc}
+site & position & atom \\
+\hline
+4a & $000$ & A & \\
+4b & $\frac{1}{2}\frac{1}{2}\frac{1}{2}$ & B \\
+4c & $\frac{1}{4}\frac{1}{4}\frac{1}{4}$ & C\\
+4d & $\frac{3}{4}\frac{3}{4}\frac{3}{4}$ & D
+\end{tabular}
+\end{center}
+\label{wyckoff.xa}
+\end{table}%
+
+\noindent None of these sites have additional conditions on $hkl$. From these assignments,
+
+\begin{align}
+F_{hkl} &= f_a + f_b e^{2\pi i\left(\frac{h+k+l}{2}\right)} + f_c e^{2\pi i\left(\frac{h+k+l}{4}\right)} + f_d e^{2\pi i\left(\frac{3h+3k+3l}{4}\right)} \nonumber \\
+&= f_a + f_b e^{\pi i\left(h+k+l\right)} + f_c e^{\frac{1}{2}\pi i\left(h+k+l\right)} + f_d e^{\frac{3}{2}\pi i\left(h+k+l\right)} \label{eq:sf-XA}
+\end{align}
+
+\noindent The first three terms are evaluated as before for the $L2_1$ structure. Only the last term requires attention. Again, we consider all even indices with sums $4n$ and $4n+2$, and all odd indices with sums $4n+1$ and $4n+3$. 
+
+\begin{align}
+hkl\,\text{even}, h+k+l=4n \qquad &e^{\frac{3}{2}\pi i\left(h+k+l\right)} = e^{\frac{3}{2}\pi i\left(4n\right)} = e^{6\pi i n} = 1\\
+hkl\,\text{even}, h+k+l=4n+2 \qquad &e^{\frac{3}{2}\pi i\left(h+k+l\right)} = e^{\frac{3}{2}\pi i\left(4n+2\right)} = e^{3\pi i \left(2n+1\right)} = -1\\
+hkl\,\text{odd}, h+k+l=4n+1 \qquad &e^{\frac{3}{2}\pi i\left(h+k+l\right)} = e^{\frac{3}{2}\pi i\left(4n+1\right)} = e^{6\pi i n}e^{3\pi i/2} = -i \\
+hkl\,\text{odd}, h+k+l=4n+3 \qquad &e^{\frac{3}{2}\pi i\left(h+k+l\right)} = e^{\frac{3}{2}\pi i\left(4n+3\right)} = e^{6\pi i n}e^{9\pi i/2} = i
+\end{align}
+
+\noindent Thus, there are four different structure factors for this structure:
+
+\begin{align}
+F_1 &= f_a+ f_b + f_c + f_d\qquad &hkl\,\text{even}, h+k+l = 4n\\
+F_2 &= f_a+ f_b - f_c - f_d \qquad &hkl\,\text{even}, h+k+l = 4n+2\\
+F_3 &= f_a - f_b + if_c - if_d \qquad &hkl\,\text{odd}, h+k+l = 4n+1\\
+F_3 &= f_a - f_b - if_c +if_d \qquad &hkl\,\text{odd}, h+k+l = 4n+3
+\end{align}
+
+\noindent Note that $F_3=F_4^*$, so the scattering intensities that result ($I\propto|F|^2$) will be the same for $F_3$ and $F_4$. Thus, there are really only 3 types of reflections that lead to unique peaks. Given that, and the form of $F_1$ and $F_2$, we can see that switching the atoms on the C and D sites has no effect on any of the intensities (a possible reason for the confusion in the literature). Note that the same is true for $F_1$ and $F_2$ and if A and B are switched.
+
+In Table~\ref{low-index-xa} we show few common planes and determine what structure factors are involved, taking into account the general restrictions listed on $hkl$ as well.
+
+\begin{table}[h]
+\begin{center}
+\caption{relevant structure factor for low index peaks}\label{low-index-xa}
+\begin{tabular}{ccccc}
+$hkl$ & $h+k+l$ & $h^2+k^2+l^2$ & structure factor & multiplicity \\
+\hline
+100 & 1 & 1 & forbidden  &6\\
+110 & 2 & 2 & forbidden &12\\
+111 & 3 & 3 & $F_4$ &8\\
+200 & 2 & 4 & $F_2$ &6\\
+220 & 4 & 8 & $F_1$ &12\\
+311 & 5 & 11 & $F_3$ &24\\
+222 & 6 & 12 & $F_2$ &8\\
+400 & 4 & 15 & $F_1$&6
+\end{tabular}
+\end{center}
+\end{table}%
+
+\subsubsection{Choice of Wykoff positions for $X_a$}
+
+Now we need to choose how to populate the Wyckoff sites to form an $X_2YZ$ Heusler. We have already deduced that switching the C and D atoms has no effect. One choice in the literature is a=Z, b=d=X, c=Y. This leads to
+
+\begin{align}
+F_1 &= f_z + f_y + 2f_x \\
+F_2 &= f_z - f_y \\
+F_3 &= F_4^* = f_z - (1+i)f_x + if_y
+\end{align}
+
+Another choice in the literature is a=Z, b=c=X, and d=Y, which should be equivalent. This gives
+
+\begin{align}
+F_1 &= f_z + f_y + 2f_x \\
+F_2 &= f_z - f_y \\
+F_3 &= F_4^* = f_z - (1-i)f_x - if_y
+\end{align}
+
+Given that intensity in an diffraction experiment is proportional to $|F|^2$, the two choices lead to identical structure factors for all peaks. That is, a diffraction experiment cannot distinguish between the two. 
+
+
+\subsubsection{Comparison between $L2_1$ and $X_a$ for low indices}
+
+\begin{table}[htdp]
+\begin{center}
+\caption{Comparing $X_a$ and $L2_1$ for low index peaks}
+\begin{tabular}{lcc}
+$\phantom{hkl}$& \multicolumn{2}{c}{$F$} \\\cline{2-3}
+$hkl\quad$  & $L2_1$ & $X_a$\\
+\hline
+111 & $f_z - f_y$  & $f_z + (i-1)f_x - if_y$\\
+200 & $f_z+ f_y - 2f_x$ & $f_z - f_y$ \\
+220 & $f_z + f_y + 2f_x$ & $f_z + f_y + 2f_x$\\
+222 & $f_z+ f_y - 2f_x$  & $f_z - f_y$ \\
+311 & $f_z - f_y$ & $f_z + (i-1)f_x - if_y$
+\label{compare.xa-l21}
+\end{tabular}
+\end{center}
+\end{table}%
+
+In Table~\ref{compare.xa-l21} we compare the results for $L2_1$ and $X_a$ for a few low index peaks. Unfortunately, the two structures share all the same reflections, but the intensity of all peaks except (220) is different, potentially by a large amount depending on the atomic scattering factors for the chosen elements at the energy of interest. Deducing this experimentally would require either a single crystal sample or a uniform powder to have reliably measured intensities. (A reliable quantitative calculation of intensity for comparison is another matter, the structure factor is only a portion of the overall intensity calculation.)
+
+\section{\protect{$XYZ$} phases}
+
+\subsection{\protect{$C1_b$} structure}
+
+This is a ``half heusler'' phase of the form $XYZ$, with space group 216 (the same as the $X_a$ structure). In fact, the usual assignments are 
+
+\begin{table}[htdp]
+\begin{center}
+\caption{Wyckoff sites for $C1_b$ $XYZ$ Heuslers}
+\begin{tabular}{cccc}
+site & position & atom \\
+\hline
+4a & $000$ & Z & \\
+4b & $\frac{1}{2}\frac{1}{2}\frac{1}{2}$ & Y \\
+4c & $\frac{1}{4}\frac{1}{4}\frac{1}{4}$ & X\\
+4d & $\frac{3}{4}\frac{3}{4}\frac{3}{4}$ & vacant
+\end{tabular}
+\end{center}
+\label{wyckoff.c1b}
+\end{table}%
+
+This is precisely the same as our $X_a$ calculation, with the d atom missing. (We caution that the assignments of X, Y, and Z to the 4a-c sites varies in the literature, as does the convention for which site is 4c and which site is 4d -- often they are swapped. However, the structure factors for $C1_b$ are exactly the same whether you leave vacant the 4c or 4d site.) The structure factor now immediately follows from our previous calculation:
+
+\begin{align}
+F_1 &= f_a+ f_b + f_c \qquad &hkl\,\text{even}, h+k+l = 4n\\
+F_2 &= f_a+ f_b - f_c \qquad &hkl\,\text{even}, h+k+l = 4n+2\\
+F_3 &= f_a - f_b + if_c \qquad &hkl\,\text{odd}, h+k+l = 4n+1\\
+F_4 &= f_a - f_b - if_c \qquad &hkl\,\text{odd}, h+k+l = 4n+3
+\end{align}
+
+What we can determine overall is that the $C1_b$ structure will be extremely hard to distinguish from either the $L2_1$ or the $X_a$ structure (particularly the latter), and thus sample composition must be ascertained carefully (overall and that it is spatially uniform) to rule out structures. 
+
+%%%%%%%%%%%%%%%
+\clearpage
+ 
+\section{Intensity}
+
+For an excellent discussion of intensity calculations for simple cases, see Ch.\ 4 in the book by Cullity and Stock.\cite{cullity01} 
+
+\subsection{Order parameter of a non-stoichiometric \protect{$B2$} alloy}
+
+Below we go through a realistic calculation of x-ray diffraction intensities for a B2 alloy XY (obtained from the $C1_b$ structure by setting Y=Z). First, we calculate the peak intensities for an ideal alloy, then we consider variation in stoichiometry (e.g., Fe deficiency). For concreteness, we will consider the FeRh system in general, and specifically a Fe$_{47}$Rh$_{47}$Pd$_{6}$ ternary analogue.
+
+Since the magnetic transition of FeRh can only be observed in the B2-like (ordered) phase, it is necessary to evaluate the long-range chemical order parameter $S$ in these films to quantify the degree to which B2 order is present throughout the specimens. The order parameter $S$ can be determined from the integrated intensity ratios of the fundamental (200) and superlattice (100) reflections, provided one accounts for the the appropriate structure factors, and film thickness and Debye-Waller corrections.\cite{fallot38,baranov95,warren69,lott08,cullity01} For this, we need reliable calculations of x-ray diffraction intensities.
+
+\subsubsection{Factors involved in the intensity calculation }
+
+The {\em integrated} intensity $I$ of a given x-ray diffraction peak can in general be written as\cite{warren69,xiao94,xiao95,cullity01}
+
+\begin{equation}
+I = |F|^2 \Lambda G_t m
+\end{equation}
+
+\noindent where $|F|^2$ is the square of the structure factor, $\Lambda$ is the Lorentz polarization factor,  $G_t$ is the film thickness correction factor, and $m$ is the multiplicity factor for the plane of interest. The Lorentz polarization factor for a single crystal in an unpolarized primary beam with incident angle $\theta$ and scattering angle $2\theta$ is\cite{warren69} $\Lambda \!=\! (1+\cos^2{2\theta})/2\sin{2\theta}$. (For a powder sample, it is $\Lambda \!=\! (1+\cos^2{2\theta})/\sin{\theta}\sin{2\theta}$, but we consider only the single crystal case here.) The thickness correction factor for a film of thickness $t$ is given by\cite{okamoto00} $G_t \!=\! 1 - \exp{(-2\mu t/\sin{\theta})}$ where $\mu$ is the linear absorption coefficient. If the sample thickness is sufficiently large compared to $1/\mu$ this term may be neglected, but this is typically not the case for thin films. The multiplicity factor is just how many equivalent planes there are for a given $(hkl)$. E.g., for $(h00)$ we have equivalents $(0h0),(00h),(\overline{h}00), (0\overline{h}0),(00\overline{h})$ for a total of 6 equivalent planes, hence $m=6$ for $(h00)$ planes.
+
+For an Fe$_x$Rh$_{1-x}$ alloy in the B2 structure, space group 221, we have Fe on the 1a (0,0,0) site and Rh on the 1b ($\frac{1}{2}$$\frac{1}{2}$$\frac{1}{2}$) site. The fundamental (200) structure factor is then found relatively easily\cite{xiao94,xiao95}
+
+\begin{equation}
+F_f = \frac{x}{1-x} f_{\mathrm{tot, Fe}} + f_{\mathrm{tot, Rh}}
+\end{equation}
+
+\noindent where $f_{\mathrm{tot, Fe(Rh)}}$ is the total atomic scattering factor, $x$ the concentration of Fe, and $1\!-\!x$ the concentration of Rh. The superlattice (100) structure factor is\cite{xiao94,xiao95}
+
+\begin{equation}
+F_s = \frac{x}{1-x} f_{\mathrm{tot, Fe}} - f_{\mathrm{tot, Rh}}
+\end{equation}
+
+The atomic scattering factors, accounting for dispersion and the Debye-Waller temperature corrections, can be written as\cite{warren69,cullity01,xiao94,xiao95,lu09}
+
+\begin{equation}
+f_{\mathrm{tot}} = \left(f_o + f^\prime + if^{\prime\prime}\right)e^{-M}
+\end{equation}
+
+\noindent where $f_o$ is the atomic scattering factor, $f^\prime$ and $f^{\prime\prime}$ are the real and imaginary dispersion corrections, respectively, and $e^{-M}$ is the Debye-Waller correction.\cite{warren69,cullity01} All three scattering terms depend on the value of $\sin{\theta}/\lambda$ for given radiation of wavelength $\lambda$ and incident angle $\theta$. The international tables for crystallography have tabulated data for all scattering terms, one must only logarithmically interpolate the tables to find values for the energy of interest.  We note that commercial programs (such as CaRine) {\em do not include the dispersion corrections}, and as a result do not produce reliable intensities in general. The exponent of the Deybe-Waller correction term takes the form $M\!=\!B\sin^2{(\theta)}/\lambda^2$ where $B$ is the (temperature-dependent) Debye-Waller factor for each element.\cite{warren69,xiao95} \\
+
+\subsubsection{Handling non-stoichiometry}
+
+Of course, these structure factors above are correct only for an Fe$_x$Rh$_{1-x}$ alloy in which there is no site disorder. Since we have an alloy which is slightly Fe-deficient compared to the equiatomic alloy, site disorder must be present as a result. Still considering an Fe$_x$Rh$_{1-x}$ alloy, if there is a fraction $y$ of Rh atoms on Fe sites due to an Fe deficiency, we may correct the structure factors following Xiao and Baker\cite{xiao94} as
+
+\begin{eqnarray}
+F_f &=&\left[ \frac{x \left(1+y\right)}{1-x}\right] \, f_{\mathrm{tot, Fe}}+\left(1+y\right)f_{\mathrm{tot, Rh}} \\
+F_s &=&   \left[\frac{x\left(1+y\right)}{1-x} \right]f_{\mathrm{tot, Fe}} - \left(1-y\right) f_{\mathrm{tot, Rh}} 
+\end{eqnarray}
+
+In the present case, we have a nominal composition of Fe$_{47}$Rh$_{47}$Pd$_{6}$. That means there is a $3\%$ excess of Rh+Pd compared to the parent Fe$_{50}$Rh$_{50}$ alloy. For that reason, we use $Y\!=\!0.03$ to represent the ideal  Fe$_{47}$Rh$_{47}$Pd$_{6}$ system, because even for perfect ordering at this composition there must be at least $3\%$ of Rh+Pd atoms which occupy Fe sites.\cite{xiao94,xiao95} Using these structure factors and the film thickness and Lorentz polarization factors above, one may calculate the superlattice $I_s$ and fundamental $I_f$ integrated intensities. The long-range order parameter $S$ can then be determined from the experimentally observed integrated intensities via\cite{warren69,lu09,xiao94,xiao95}
+
+\begin{equation}
+S^2 = \frac{\left(I_s/I_f\right)_{\mathrm{obs}}}{\left(I_s/I_f\right)_{\mathrm{calc}}}
+\end{equation}
+
+For Fe, we used the scattering factor terms $f_o$, $f^\prime$, $f^{\prime\prime}$ for the appropriate values of $\sin{(\theta)}/\lambda$ \cite{warren69} interpolated from the tables in Ref.~\onlinecite{warren69} and the Deybe-Waller factors given in Refs.~\onlinecite{lu09} and \onlinecite{peng96}. Since the scattering factors for Rh and Pd are very similar,\cite{NIST1,NIST2,warren69} and the Pd content is small, we have used the structure factor for an ideal Fe$_x$Rh$_{1-x}$ alloy with $1\!-\!x\!=\!0.53$ as the {\em combined} Rh+Pd concentration, but replaced the individual Rh scattering factor terms with composition-weighted averages of those of Rh and Pd.\cite{warren69,lott08} Similarly, we used a composition-weighted average for the Debye-Waller factors.\cite{peng96,baria04} The linear absorption coefficient is a composition-weighted average of those for Fe, Rh, and Pd.\cite{NIST1,NIST2} 
+
+\subsubsection{Results for \protect{Fe$_{47}$Rh$_{47}$Pd$_{6}$ }}
+
+The resulting parameters for our calculation of the fully-ordered Fe$_{47}$Rh$_{47}$Pd$_{6}$ superlattice (001) and fundamental (002) integrated diffraction intensities are shown in Table~\ref{tab:parms}.
+
+\begin{table}
+\begin{tabular}{@{}ccc c c ccc} \hline
+Atom & Peak & $\theta$ & $B$ (\AA$^2$) & $\mu$ (cm$^{-1}$) & $f_o$ & $f^\prime$ & $f^{\prime\prime}$ \\ \hline
+Fe & (001) & 14.8 & 0.343 & 2424 & 21.36 & -1.1 & 3.3 \\
+& (002) & 30.8 & 0.343 & 2424 &15.90 & -1.1 & 3.3\\ \hline
+Rh & (001) & 14.8 &  0.153 & 2408 & 38.00 & -0.5 & 4.0\\
+& (002) & 30.8 & 0.153 & 2408 & 29.71 & -0.5 & 3.8\\ \hline
+Pd & (001) & 14.8 & 0.448 & 2476 & 38.90 & -0.5 & 4.3\\
+& (002) & 30.8 & 0.448 & 2476 & 30.47 & -0.5 & 4.1\\
+\end{tabular}
+\caption{Parameters used to calculate the $(001)$ and $(002)$ peak intensities for Fe$_{47}$Rh$_{47}$Pd$_{6}$ (see text for definitions). The Debye-Waller factor $B$ is valid at $300\,$K, all quantities are taken for Cu K$_{\alpha}$ radiation ($\lambda\!=\!1.54\,$\AA, $E\!=\!8.04\,$keV). The film thickness is $t\!=\!30\,$nm. }\label{tab:parms}
+\end{table}
+
+\begin{table}
+\begin{tabular}{@{}ccccccc} \hline
+$T_{\mathrm{g}}$ ($^{\circ}$C) & $T_{\mathrm{a}}$ ($^{\circ}$C) & $a$ (nm) & $c$ (nm) & $I_s/I_f$ & $S$  \\ \hline
+400 & n/a  & 0.2974&0.3035 &0.831 & 0.95 \\
+500 & n/a &0.2993 & 0.3020& 0.820 & 0.96\\
+600 & n/a & 0.2996 & 0.3016 & 0.720  & 0.96 \\
+700 & n/a & 0.2996 & 0.3004 & 0.811 & 0.93\\ \hline
+400 & 500 & 0.2977 & 0.3040 & 0.752 & 0.98\\
+400 & 600 & 0.2981 & 0.3017 & 0.683 & 0.93\\
+400 & 700 &  0.2992 & 0.3005 &0.755 & 0.98\\ \hline
+\end{tabular}
+\caption{The measured $I_s/I_f$ intensity ratio and calculated lattice constants and order parameter $S$ for different growth temperatures $T_{\mathrm{g}}$ and annealing temperatures $T_{\mathrm{a}}$. The uncertainty in $S$ is taken as $\pm\!0.05$. }\label{tab:order}
+\end{table}
+
+Table~\ref{tab:order} gives the measured $I_s/I_f$ intensity ratio and calculated order parameter $S$ as a function of the alloy growth temperature $T_{\mathrm{g}}$, confirming that $S$ is almost independent of the growth temperature with an average value of $S\!\approx\!0.95\pm 0.05$. This indicates that the growth temperature had no significant influence on the degree of {\em chemical} ordering in this growth temperature range. In all three cases, the order parameter and integral peak intensity ratios are identical within the uncertainty in the measurements. 
+
+%%%%%%%%%%%%%%%
+
+\subsection{Intensities for an ideal \protect{$L2_1$} compound}
+
+We will now calculate the intensities for a few key peaks for an ideal $L2_1$ compound. The structure factors found previously are
+
+\begin{align}
+F_1 &= f_z + f_y + 2f_x \qquad &hkl\,\text{even}, h+k+l = 4n\\
+F_2 &= f_z+ f_y - 2f_x \qquad &hkl\,\text{even}, h+k+l = 4n+2\\
+F_3 &= f_z - f_y \qquad &hkl\,\text{odd}
+\end{align}
+
+One thing to keep in mind for the $X_2YZ$ structure (with site assignment as before) is that complete Y-Z mixing would result in $F_3=0$. This eliminates all odd (hkl) peaks, in particular the usually prominent (111) peak. In this case, the structure becomes B2. If we have X-Y-Z mixing, we can see that $F_2=0$ as well, and all even (hkl) peaks with $h+k+l=4n+2$ are eliminated, in particular the (200) peak, and the structure becomes $A2$. In this way the intensity of the (111) peak speaks to the Y-Z sublattice ordering, and in combination with the (200) to the X sublattice ordering. 
+
+If we take the atomic scattering factors to be $f_{\text{total}}\!=\!(f+f^\prime + f^{\prime\prime})e^{-M} = (f + i\delta)e^{-M}$ as in the previous section, for the (111) superlattice peak the structure factor and its squared magnitude become
+
+\begin{align}
+F_{111} &= \lvert \left(f_y + i\delta_y\right)e^{-M_y} - \left(f_z + i\delta z\right)e^{-M_z} \rvert\\
+|F_{111}|^2 &= \left(f_y e^{-M_y} - f_ze^{-M_z}\right)^2 + \left(\delta_y e^{-M_y}-\delta_z e^{-M_z}\right)^2
+\end{align}
+
+As expected, we need contrast between the Y and Z elements to observe the (111) superlattice peak, even in the case of no Y-Z mixing. For the (200) and (220) peaks, we find
+
+\begin{align}
+|F_{200}|^2 &= \left(f_y e^{-M_y} + f_z e^{-M_z} - 2f_x e^{-M_x}\right)^2 + \left(\delta_y e^{-M_y} + \delta_z e^{-M_z} - 2\delta_x e^{-M_x}\right)^2\\
+|F_{220}|^2 &= \left(f_y e^{-M_y} + f_z e^{-M_z} + 2f_x e^{-M_x}\right)^2 + \left(\delta_y e^{-M_y} + \delta_z e^{-M_z} + 2\delta_x e^{-M_x}\right)^2
+\end{align}
+
+For the 200 peak, we need contrast between X and (Y+Z) scattering factors, even with no sublattice mixing. The 220 fundamental peak remains unchanged with sublattice mixing. For numerical calculations, one must now find the values of the atomic scattering factors for each element at the energy of interest,\cite{itc} as well as the Debye-Waller factors. Commercial programs, such as CaRine, do not include the dispersive terms in the scattering factors, and may not be reliable (particularly for heavier elements, or near an x-ray absorption edge for a particular element). And, just to be clear: one must still include the factors $\Lambda$, $G$, and $m$ to come up with a reliable calculation of intensity, $|F|^2$ alone is not enough
+
+\subsection{Intensities for an ideal \protect{$X_a$} compound and comparison with $C1_b$ }
+
+Here we merely quote the results for an ABCD compound in the $X_a$ structure. Again note that some authors swap the c and d atom sites.
+
+\begin{align}
+|F_1|^2 &= \left(f_a + f_b + f_c + f_d\right)^2 + \left(\delta_a + \delta_b + \delta_c + \delta_d\right)^2  \qquad (220), (400)\\
+|F_2|^2 &= \left(f_a + f_b - f_c - f_d\right)^2 + \left(\delta_a + \delta_b - \delta_c - \delta_d\right)^2 \qquad (200), (222)\\
+|F_3|^2 &= |F_4|^2 = \left(f_a + f_b + \delta_d - \delta_c\right)^2 + \left(f_d - f_c + \delta_b - \delta_a\right)^2  \qquad (111), (311)
+\end{align}
+
+For $C1_b$, we need only set all D terms to zero in our expressions for the $X_a$ structure:
+
+\begin{align}
+|F_1|^2 &= \left(f_a + f_b + f_c\right)^2 + \left(\delta_a + \delta_b + \delta_c \right)^2  \qquad (220), (400)\\
+|F_2|^2 &= \left(f_a + f_b - f_c \right)^2 + \left(\delta_a + \delta_b - \delta_c \right)^2 \qquad (200), (222)\\
+|F_3|^2 &= |F_4|^2 = \left(f_a + f_b  - \delta_c\right)^2 + \left(f_c + \delta_a - \delta_b\right)^2 \qquad (111), (311) \\
+\end{align}
+
+We could also consider a $X_{1+x}YZ$ structure in a disordered state between $X_a$ ($x=1$) and $C1_b$ ($x=0$), just by adding a factor $x$ to each of the D terms for the $X_a$ structure:
+
+\begin{align}
+|F_1|^2 &= \left(f_a + f_b + f_c + xf_d\right)^2 + \left(\delta_a + \delta_b + \delta_c + x\delta_d\right)^2  \qquad (220), (400)\\
+|F_2|^2 &= \left(f_a + f_b - f_c - xf_d\right)^2 + \left(\delta_a + \delta_b - \delta_c - x\delta_d\right)^2 \qquad (200), (222)\\
+|F_3|^2 &= |F_4|^2 = \left(f_a + f_b + x\delta_d - \delta_c\right)^2 + \left(xf_d - f_c + \delta_b - \delta_a\right)^2 \qquad (111), (311)\\
+\end{align}
+
+\subsection{Comparing $L2_1$, $X_a$ and $C1_b$}
+
+Based on diffraction alone, telling these three structure apart can only be done by relative intensities. This requires the use of single crystals or powder samples to avoid spurious results due to oriented grains. An accurate composition determination is necessary as well, since the ideal $C1_b$ requires a different composition than the other two. Given a homogeneous composition of $X_2YZ$, the choices are $L2_1$ and $X_a$, and whether the intensity differences are sizable will come down to the particular elements chosen. Given a homogeneous composition $XYZ$, only $C1_b$ remains as a candidate among the three structures. 
+
+More problematic are cases where the equilibrium composition is between $XYZ$ and $X_2YZ$. Is it a trivial result due to phase segregation, is one sublattice having defects, or is a novel phase forming? Detailed microstructural and composition analyses must be carefully performed to rule out phase segregation. For the Fe-Ti-Sb system,\cite{FeTiSb} both theory and experiment indicated a equilibrium composition of Fe$_{1.5}$TiSb, which could be viewed as a defective $L2_1$ or $X_a$ structure, or a $C1_b$ structure that has partially filled the 4d sites, and there is little difference between the three cases from an experimental point of view. 
+
+In any event, for low index peaks we compare the intensities of all three structures. For $X_a$, there are two plausible assignments for the XYZ elements:
+
+\begin{align}
+&A=Z, B=X, C=Y, D=X\\
+&A=Z, B=X, C=X, D=Y
+\end{align}
+
+However,  as discussed above the x-ray intensities are identical for these two choices. For the $L2_1$ structure, we follow the assignments as noted in the derivation of the structure factor. For the $C1_b$ structure, we will adopt the following assignments (though switching C and D would again have no effect).
+
+\begin{align}
+&A=Z, B=X, C=Y, D=vacant
+\end{align}
+
+We will also consider a $C1_b$ with ``excess" X, such that a fraction $x$ of the 4d sites are occupied with an X atom. For $x=0$ we have $C1_b$, for $x=1$ we have $X_a$. We note this case in the table below as ``$C1_b+x$" 
+
+Now we imagine that we have indexed our X-ray pattern to a cubic structure, but don't know the composition very well. Will the x-ray intensities give us an idea of which structure was adopted (provided we calculate all the other factors very well)? For brevity we will ignore the dispersive scattering terms. (For a real calculation, go back to the $F_i$ and add them back in before finding $|F|^2$.) 
+
+\begin{table}[htdp]
+\begin{center}
+\caption{Comparing low index structure factors}
+\begin{tabular}{ccccc}
+$hkl$ & $L2_1$ & $X_a$ & $C1_b+x$ & $C1_b$ \\ \hline
+111 & $(f_y-f_z)^2$ & $(f_z + f_x)^2 + (f_y-f_x)^2$ & $(f_z + f_x)^2+(f_y-xf_x)^2$ & $(f_z+f_x)^2 + f_y^2$\\
+200 & $(f_y + f_z - 2f_x)^2$ & $(f_z-f_y)^2$ & $(f_z+(1-x)f_x - f_y)^2$ & $(f_z+f_x-f_y)^2$\\
+220 & $(f_y+f_z + 2f_x)^2$ & $(f_y+f_z + 2f_x)^2$ & $(f_y + f_z + (1+x)f_x)^2$ & $(f_y + f_z + f_x)^2$
+\end{tabular}
+\end{center}
+\end{table}%
+
+All three structures have distinct intensity patterns, at least in principle, but depending on the choice of $X,Y,Z$ the differences may be subtle.
+
+
+
+
+\bibliographystyle{iop}
+\bibliography{refs}
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
