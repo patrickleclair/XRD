@@ -28,7 +28,7 @@
 #https://homepage.univie.ac.at/michael.leitner/lattice/spcgrp/hexagonal.html
 #DO22 = space group no. 139, I4/mmm. structures DO22, DO23, A6 (monotomic L1_0)
 #see https://homepage.univie.ac.at/michael.leitner/lattice/spcgrp/tetragonal.html
-
+#space group 46 = orthorhombic, adopted by FeTiSi 
 #assumes bulk samples (no thickness/absorption correction)
 # and no Debye-Waller correction
 
@@ -55,18 +55,18 @@ SINGLE_XTAL = 1
 	
 ######## HERE IS A BLOCK THAT YOU EDIT ########
 
-A = 5.718 #5.784 #5.22 					#a lattice constant angstroms
+A = 5.742 #5.784 #5.22 					#a lattice constant angstroms
 B = 10.9645
 C = 6.3717 #4.24
 hmax = kmax = lmax = 10
 THETA_MAX = 120
 THETA_MIN = 5 
-XRAY = "Cu"   # or "Cu"
+XRAY = "Co"   # or "Cu"
 DISPERSION = 1  #include f' and f" dispersion corrections to atomic scattering factor?
 				#we turn this off to compare with other software
 				
 DEBYE_WALLER = 1 #include debye-waller correction or no - turn off to compare w/ others
-SAMPLE_TYPE = SINGLE_XTAL 	# POWDER or SINGLE_XTAL, to determine Lorentz-polarization 
+SAMPLE_TYPE = POWDER 	# POWDER or SINGLE_XTAL, to determine Lorentz-polarization 
 
 ###############################################
 
@@ -86,13 +86,13 @@ else:
 	print("Debye-Waller corrections NOT included")
 
 if (XRAY=="Co"): #Co				#specify what x-ray wavelength to use
-	Lambda = 1.79					#in Angstroms
+	Lambda = 1.79026				#in Angstroms
 	print("Co Ka")					#TODO: may as well include other wavelengths
 elif (XRAY=="Cu"): #Cu
-	Lambda = 1.54
+	Lambda = 1.54184
 	print("Cu Ka")
 else: 
-	Lambda = 1.54	
+	Lambda = 1.54184	
 	print("No X-ray wavelength specified, defaulting to Cu Ka.")	
 
 #which space group to generate structure?
@@ -200,113 +200,123 @@ elements = {      		#this structure is to make output readable mostly
 	'100':'FeCo',
 	}
 
-#5 gaussian approximation to f from ref below. this is what VESTA uses.
+#5 gaussian approximation to f(s) from ref below. this is what VESTA does fyi.
 # Acta Cryst. (1995). A51,416-431
-#New Analytical Scattering-Factor Functions for Free Atoms and Ions
-#BY D. WAASMAIER AND A. KIRFEL
-#a[i] are elements 0-4, b[i] are elements 5-9, c is element 10
+# New Analytical Scattering-Factor Functions for Free Atoms and Ions
+# BY D. WAASMAIER AND A. KIRFEL
+# a[i] are elements 0-4, b[i] are elements 5-9, c is element 10
 # f = sum a[i] * exp[-b[i]*s^2] + c where s=sin(theta)/lambda 
 # alternatively see data at 
 # http://it.iucr.org/Cb/ch6o1v0001/sec6o1o1/ table 6.1.1.1 for fo 
 # and approximate as you will
+# Note Fe and Co are tough b/c near absorption for Co, Cu Ka radiation. Careful!
 
-#dispersion corrections are:
-#array element [i][11] is f', element [i][12] is f" (dispersion corrections)
-#use http://it.iucr.org/Cb/ch4o2v0001/sec4o2o6/ table 4.2.6.8 for f', f"
+# dispersion corrections are:
+# array element [i][11] is f', element [i][12] is f" (dispersion corrections)
+# linear interpolation of https://physics.nist.gov/PhysRefData/FFast/html/form.html
+# INCLUDES nuclear thompson and relativistic corrections to f1
+# so f' = f1 + f_NT = f1 + f_rel + f_NT - Z as they put it
+# can also use http://it.iucr.org/Cb/ch4o2v0001/sec4o2o6/ table 4.2.6.8 for f', f"
+# ends up being very close
 
-#do NOT average structure factors to mix elements. 
-#since intensity depends on f^2, this will not work right. instead, adjust occupancy.
-#can have e.g. X = [Fe,Sites.h6,2.0/3] and Y = [Mn,Sites.h6,1.0/3] to randomize sites
+# do NOT average structure factors to mix elements. 
+# since intensity depends on f^2, this will not work right. instead, adjust occupancy.
+# can have e.g. X = [Fe,Sites.h6,2.0/3] and Y = [Mn,Sites.h6,1.0/3] to randomize sites
 
-#last item in list [13] is debye-waller factor B in (angstrom)^2 from 
-#DebyeWaller Factors and Absorptive Scattering Factors of Elemental Crystals
-#L.-M. Peng, G. Ren, S. L. Dudarev and M. J. Whelan
-#Acta Crystallographica Section A
-#Foundations of Crystallography
-#or otherwise where noted
+
+# last item in list [13] is Debye-Waller factor B in (angstrom)^2 from 
+# DebyeWaller Factors and Absorptive Scattering Factors of Elemental Crystals
+# L.-M. Peng, G. Ren, S. L. Dudarev and M. J. Whelan
+# Acta Crystallographica Section A Foundations of Crystallography
+# or otherwise where noted
+# we use data from elemental crystals (not ions) for lack of anything better.
 
 ScatteringFactor = [[0 for x in range(14)] for x in range(111)]  #roentgenium
 
     #Ti: B=0.55 https://www.publish.csiro.au/ph/pdf/ph880461
 
-
 #0-4 are a_i, 5-9 are b_i, 10 is c in analytical expansion
 #11, 12 = f', f"
 #13 = DW
 
-ScatteringFactor[26][0] = 12.311098 #a1			#Fe
-ScatteringFactor[26][1] = 1.876623
-ScatteringFactor[26][2] = 3.066177
-ScatteringFactor[26][3] = 2.070451
-ScatteringFactor[26][4] = 6.975185
-ScatteringFactor[26][5] = 5.009415 #b1
-ScatteringFactor[26][6] = 0.014461
-ScatteringFactor[26][7] = 18.743041
-ScatteringFactor[26][8] = 82.767874
-ScatteringFactor[26][9] = 0.346506
+ScatteringFactor[26][0] = 12.311098  #a1			#Fe
+ScatteringFactor[26][5] = 5.009415   #b1
+ScatteringFactor[26][1] = 1.876623   #a2
+ScatteringFactor[26][6] = 0.014461   #b2
+ScatteringFactor[26][2] = 3.066177   #a3
+ScatteringFactor[26][7] = 18.743041  #b3
+ScatteringFactor[26][3] = 2.070451   #a4
+ScatteringFactor[26][8] = 82.767874  #b4
+ScatteringFactor[26][4] = 6.975185   #a5
+ScatteringFactor[26][9] = 0.346506   #b5
 ScatteringFactor[26][10] = -0.304931 #c
 
 if (XRAY=="Co"):
-	ScatteringFactor[26][11] = -3.3307
-	ScatteringFactor[26][12] = 0.4901*1j
+	ScatteringFactor[26][11] = -3.3891  #f'
+	ScatteringFactor[26][12] = 0.47507*1j #f"
 elif (XRAY=="Cu"):
-	ScatteringFactor[26][11] = -1.1336
-	ScatteringFactor[26][12] = 3.1974*1j
+	ScatteringFactor[26][11] = -1.285
+	ScatteringFactor[26][12] = 3.185*1j
 else: #default to Cu Ka if undefined
-	ScatteringFactor[26][11] = -1.1336
-	ScatteringFactor[26][12] = 3.1974*1j
-ScatteringFactor[26][13] = 0.3272				#L.-M. Peng, G. Ren, S. L. Dudarev and M. J. Whelan @ 295K bcc
+	ScatteringFactor[26][11] = -1.285
+	ScatteringFactor[26][12] = 3.185*1j
+ScatteringFactor[26][13] = 0.3272	#B 
+#B from L.-M. Peng, G. Ren, S. L. Dudarev and M. J. Whelan @ 295K bcc
 
 ScatteringFactor[27][0] = 12.914510 #a1			#Co
-ScatteringFactor[27][1] = 2.481908
-ScatteringFactor[27][2] = 3.466894
-ScatteringFactor[27][3] = 2.106351
-ScatteringFactor[27][4] = 6.960892
-ScatteringFactor[27][5] = 4.507138 #b1
-ScatteringFactor[27][6] = 0.009126
-ScatteringFactor[27][7] = 16.438130
-ScatteringFactor[27][8] = 76.987317
-ScatteringFactor[27][9] = 0.314418
+ScatteringFactor[27][5] = 4.507138  #b1
+ScatteringFactor[27][1] = 2.481908  #a2
+ScatteringFactor[27][6] = 0.009126  #b2
+ScatteringFactor[27][2] = 3.466894  #a3
+ScatteringFactor[27][7] = 16.438130 #b3
+ScatteringFactor[27][3] = 2.106351  #a4
+ScatteringFactor[27][8] = 76.987317 #b4
+ScatteringFactor[27][4] = 6.960892  #a5
+ScatteringFactor[27][9] = 0.314418  #b5
 ScatteringFactor[27][10] = -0.936572 #c
 if (XRAY=="Co"):
-	ScatteringFactor[27][11] = -2.023
-	ScatteringFactor[27][12] = 0.5731*1j
+	ScatteringFactor[27][11] = -2.0998  #f'
+	ScatteringFactor[27][12] = 0.55705*1j #f"
 elif (XRAY=="Cu"):
-	ScatteringFactor[27][11] = -2.3653
-	ScatteringFactor[27][12] = 3.6143*1j
+	ScatteringFactor[27][11] = -2.7647
+	ScatteringFactor[27][12] = 3.6398*1j
 else: #default to Cu Ka if undefined
-	ScatteringFactor[27][11] = -2.3653
-	ScatteringFactor[27][12] = 3.6143*1j	
-ScatteringFactor[27][13] = 0.39  #https://www.publish.csiro.au/ph/pdf/ph880461
+	ScatteringFactor[27][11] = -2.7647
+	ScatteringFactor[27][12] = 3.6398*1j
+ScatteringFactor[27][13] = 0.307    #B	#https://onlinelibrary.wiley.com/iucr/doi/10.1107/S0108767399005176
+#also a value of 0.39 at https://www.publish.csiro.au/ph/pdf/ph880461
 
 
 ScatteringFactor[32][0] = 16.540614 #a1			#Ge
-ScatteringFactor[32][1] = 1.567900
-ScatteringFactor[32][2] = 3.727829
-ScatteringFactor[32][3] = 3.345098
-ScatteringFactor[32][4] = 6.785079
-ScatteringFactor[32][5] = 2.866618 #b1
-ScatteringFactor[32][6] = 0.012198
-ScatteringFactor[32][7] = 13.432163
-ScatteringFactor[32][8] = 58.866046
-ScatteringFactor[32][9] = 0.210974
+ScatteringFactor[32][5] = 2.866618  #b1
+ScatteringFactor[32][1] = 1.567900  #a2
+ScatteringFactor[32][6] = 0.012198  #b2
+ScatteringFactor[32][2] = 3.727829  #a3
+ScatteringFactor[32][7] = 13.432163 #b3
+ScatteringFactor[32][3] = 3.345098  #a4
+ScatteringFactor[32][8] = 58.866046 #b4
+ScatteringFactor[32][4] = 6.785079  #a5
+ScatteringFactor[32][9] = 0.210974  #b5
 ScatteringFactor[32][10] = 0.018726 #c
 if (XRAY=="Co"):
-	ScatteringFactor[32][11] = -0.7781
-	ScatteringFactor[32][12] = 1.557*1j
+	ScatteringFactor[32][11] = -0.72563  #f'
+	ScatteringFactor[32][12] = 1.1446*1j #f"
 elif (XRAY=="Cu"):	
-	ScatteringFactor[32][11] = -1.0885
-	ScatteringFactor[32][12] = 0.8855*1j
+	ScatteringFactor[32][11] = -1.1475
+	ScatteringFactor[32][12] = 0.88279*1j
 else:	
-	ScatteringFactor[32][11] = -1.0885
-	ScatteringFactor[32][12] = 0.8855*1j	
-ScatteringFactor[32][13] = 0.6041		#L.-M. Peng, G. Ren, S. L. Dudarev and M. J. Whelan @ 295K
+	ScatteringFactor[32][11] = -1.1475
+	ScatteringFactor[32][12] = 0.88279*1j
+ScatteringFactor[32][13] = 0.6041		#B
+#B from L.-M. Peng, G. Ren, S. L. Dudarev and M. J. Whelan @ 295K
 	
 
-#generate atomic scattering factor with the data in the matrices above
-#we are not doing the thickness/absorption correction yet
-#Debye-Waller data is hard to come by
-#if you are using films, you need to add the absorption correction
+# generate atomic scattering factor with the data in the matrices above
+# we are not doing the thickness/absorption correction yet
+# for films, you need to add the absorption/thickness correction later to each peak
+# can turn off dispersion (f', f) and Debye-Waller corrections to compare with other 
+# software or just see how much they matter. turning off dispersion also turns off
+# the nuclear-Thompson and relativistic corrections to f' of course
 
 def f(element,d):  			
 	s = 1.0/(2.0*d)    #sin(theta)/lambda
@@ -318,11 +328,11 @@ def f(element,d):
 	if (DISPERSION):
 		f += ScatteringFactor[element][11] + ScatteringFactor[element][12] #add dispersion
 	if (DEBYE_WALLER):
-		f *= exp(-ScatteringFactor[element][13]*s**2)	
+		f *= exp(-ScatteringFactor[element][13]*s*s)	
 		#D-W added here b/c it was simple to do it here. 
 	return (f)		#note element [12] is imaginary, so return value is complex
 
-#general rules for a given space group on allowed hkl
+# general rules for a given space group on allowed hkl
 			
 def rules(h,k,l):	#general rules for allowed hkl 
 	allowed=1
@@ -647,8 +657,8 @@ X1 = [Co,Sites.c8,0.5]    		#2 atoms			#set as SG225 structure!
 X2 = [Co,Sites.c8,0.5] 			#2 atoms
 Y1 = [Fe,Sites.b4,0.5]			#1 atom
 Y2 = [Fe,Sites.b4,0.5]			#1 atom
-Z1 = [Ge,Sites.a4,0.75]			#1 atom
-Z2 = [Fe,Sites.a4,0.25]			#1 atom
+Z1 = [Ge,Sites.a4,0.5]			#1 atom
+Z2 = [Ge,Sites.a4,0.5]			#1 atom
 
  
 Pattern(X1,X2,Y1,Y2,Z1,Z2,plot,outputfile,outputsites)	
