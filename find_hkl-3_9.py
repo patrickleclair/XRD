@@ -29,16 +29,16 @@
 #DO22 = space group no. 139, I4/mmm. structures DO22, DO23, A6 (monotomic L1_0)
 #see https://homepage.univie.ac.at/michael.leitner/lattice/spcgrp/tetragonal.html
 #space group 46 = orthorhombic, adopted by FeTiSi 
-#assumes bulk samples (no thickness/absorption correction)
-# and no Debye-Waller correction
 
-#todo: thickness correction
-#todo: interactive input to put in parameters, see graph change. option
-	#to pop up windows with peak lists, etc? 
-#todo: other elements? 
+#assumes bulk samples (no thickness/absorption correction). 
+
+#todo: automatic calculation of linear absorption coefficient mu for thickness dep.
+	#need another mu parameter for each element & x-ray used
+	#and code to do the composition weighting
+	#for now: global MU we assume is proper avg you want at the x-ray of interest
+#todo: parameters for other elements
 #todo: other space groups, variation of parameters associated
-#todo: DW factor is a hack, make a separate function for this.
-#as is global dispersion flag, but that is maily just to check against other software.
+#todo: DW factor is a hack, make a separate function for this for clarity?
 
 import csv
 from numpy import *
@@ -48,25 +48,34 @@ import matplotlib.pyplot as plt
 #class so we can do things like Site.a2, Site.h6, etc
 class positions: 
 	pass
-
-#specimen types, hacked in later to adjust lorentz-polarization factor		
-POWDER = 0
-SINGLE_XTAL = 1	
 	
 ######## HERE IS A BLOCK THAT YOU EDIT ########
 
-A = 5.742 #5.784 #5.22 					#a lattice constant angstroms
-B = 10.9645
-C = 6.3717 #4.24
+#specimen types to adjust lorentz-polarization factor		
+POWDER = 0
+SINGLE_XTAL = 1	
+
+#calculation ranges
 hmax = kmax = lmax = 10
 THETA_MAX = 120
 THETA_MIN = 5 
-XRAY = "Co"   # or "Cu"
+
+#wavelength and corrections
+XRAY = "Cu"   	# "Co" or "Cu"; no others implemented currently
 DISPERSION = 1  #include f' and f" dispersion corrections to atomic scattering factor?
 				#we turn this off to compare with other software
 				
-DEBYE_WALLER = 1 #include debye-waller correction or no - turn off to compare w/ others
-SAMPLE_TYPE = POWDER 	# POWDER or SINGLE_XTAL, to determine Lorentz-polarization 
+DEBYE_WALLER = 1 		#include debye-waller correction or no 
+SAMPLE_TYPE = SINGLE_XTAL 	# POWDER or SINGLE_XTAL, to determine Lorentz-polarization 
+FILM = 1
+THICKNESS = 19.5e-7 #in cm
+
+MU = 3031  #in 1/cm, for thickness corr.
+
+#lattice constants
+A = 5.718 #5.784 #5.22 					#a lattice constant angstroms
+B = 10.9645
+C = 6.3717 #4.24
 
 ###############################################
 
@@ -84,6 +93,11 @@ if (DEBYE_WALLER):
 	print("Debye-Waller corrections included")
 else:
 	print("Debye-Waller corrections NOT included")
+	
+if (FILM):
+	print("Thin film: thickness correction applied, t=%s cm, mu=%s 1/cm"%(THICKNESS,MU))
+else:
+	print("Bulk assumed, no thickness correction")
 
 if (XRAY=="Co"): #Co				#specify what x-ray wavelength to use
 	Lambda = 1.79026				#in Angstroms
@@ -100,9 +114,11 @@ space_group = "SG225" #SG46, SG216, SG194, SG139
 
 print("%s structure"%(space_group))
 print("a lattice parameter %s A"%(A))
+if (space_group=="SG46"):
+	print("b lattice parameter %s A"%(B))
 if (space_group=="SG194" or space_group=="SG139"):
 	print("c lattice parameter %s A"%(C))
-	
+
 x = 0.0 #x,z parameters for structure, if needed
 y = 1.0/6
 z = 0.12
@@ -200,7 +216,7 @@ elements = {      		#this structure is to make output readable mostly
 	'100':'FeCo',
 	}
 
-#5 gaussian approximation to f(s) from ref below. this is what VESTA does fyi.
+# 5 gaussian approximation to f(s) from ref below. this is what VESTA does fyi.
 # Acta Cryst. (1995). A51,416-431
 # New Analytical Scattering-Factor Functions for Free Atoms and Ions
 # BY D. WAASMAIER AND A. KIRFEL
@@ -215,7 +231,7 @@ elements = {      		#this structure is to make output readable mostly
 # array element [i][11] is f', element [i][12] is f" (dispersion corrections)
 # linear interpolation of https://physics.nist.gov/PhysRefData/FFast/html/form.html
 # INCLUDES nuclear thompson and relativistic corrections to f1
-# so f' = f1 + f_NT = f1 + f_rel + f_NT - Z as they put it
+# so (my f') = f' + f_NT = f1 + f_rel + f_NT - Z as they put it
 # can also use http://it.iucr.org/Cb/ch4o2v0001/sec4o2o6/ table 4.2.6.8 for f', f"
 # ends up being very close
 
@@ -235,9 +251,9 @@ ScatteringFactor = [[0 for x in range(14)] for x in range(111)]  #roentgenium
 
     #Ti: B=0.55 https://www.publish.csiro.au/ph/pdf/ph880461
 
-#0-4 are a_i, 5-9 are b_i, 10 is c in analytical expansion
-#11, 12 = f', f"
-#13 = DW
+#0-4 are a_i, 5-9 are b_i, 10 is c in analytical expansion for fo 
+#11, 12 = f', f". f' includes nuclear-Thompson and relativistic bits
+#13 = Debye-Waller, for elemental xtal
 
 ScatteringFactor[26][0] = 12.311098  #a1			#Fe
 ScatteringFactor[26][5] = 5.009415   #b1
@@ -286,7 +302,6 @@ else: #default to Cu Ka if undefined
 ScatteringFactor[27][13] = 0.307    #B	#https://onlinelibrary.wiley.com/iucr/doi/10.1107/S0108767399005176
 #also a value of 0.39 at https://www.publish.csiro.au/ph/pdf/ph880461
 
-
 ScatteringFactor[32][0] = 16.540614 #a1			#Ge
 ScatteringFactor[32][5] = 2.866618  #b1
 ScatteringFactor[32][1] = 1.567900  #a2
@@ -323,14 +338,14 @@ def f(element,d):
 	f=0
 	for i in range(5):
 		f += ScatteringFactor[element][i]*exp(-ScatteringFactor[element][i+5]*s*s)
-		#sum a_i * exp(-b_i s^2)  gaussian approx
+		#sum a_i * exp(-b_i s^2)  gaussian approx to fo
 	f += ScatteringFactor[element][10]  # + c 
-	if (DISPERSION):
-		f += ScatteringFactor[element][11] + ScatteringFactor[element][12] #add dispersion
+	if (DISPERSION): #add dispersion f' and f''. note f'' is imaginary
+		f += ScatteringFactor[element][11] + ScatteringFactor[element][12] 
 	if (DEBYE_WALLER):
 		f *= exp(-ScatteringFactor[element][13]*s*s)	
-		#D-W added here b/c it was simple to do it here. 
-	return (f)		#note element [12] is imaginary, so return value is complex
+		#f_tot = (fo + f' + f'')*DW 
+	return (f)		#note element [12] is imaginary, so return value is complex	
 
 # general rules for a given space group on allowed hkl
 			
@@ -433,14 +448,13 @@ def d_hkl(h,k,l):								#d spacing for hkl
 		tmp = (h*h)/(A*A)+(k*k)/(B*B)+(l*l)/(C*C)
 	return (1.0/sqrt(tmp))
 	
-def bragg(d,Lambda):
+def bragg(d,Lambda):   #just spits back 2theta given d and lambda 
 	tmp = (Lambda/(2.0*d))
 	if tmp<=1:
 		angle = 2.0*degrees(arcsin(tmp)) 
 	else: 
 		angle = 0	#bad arcsin
-	return(angle)
-	
+	return(angle)   
 	
 def Lorentz_Pol(d,Lambda):      
 	if ((Lambda/(2.0*d)) <= 1.0):
@@ -496,7 +510,11 @@ def Pattern(X1,X2,Y1,Y2,Z1,Z2,plot,outputfile,outputsites):
 					d = d_hkl(h,k,l)
 					two_theta = bragg(d,Lambda)
 					LP = Lorentz_Pol(d,Lambda)
-					I = LP*(absolute(F_X1*f(X1[0],d)+F_Y1*f(Y1[0],d)+F_Z1*f(Z1[0],d)+F_X2*f(X2[0],d)+F_Y2*f(Y2[0],d)+F_Z2*f(Z2[0],d)))**2
+					if (FILM):	#thickness correction factor
+						G = 1.0-exp(-4.0*MU*THICKNESS*d/Lambda)
+					else:
+						G = 1.0 
+					I = G*LP*(absolute(F_X1*f(X1[0],d)+F_Y1*f(Y1[0],d)+F_Z1*f(Z1[0],d)+F_X2*f(X2[0],d)+F_Y2*f(Y2[0],d)+F_Z2*f(Z2[0],d)))**2
 					if ((two_theta<THETA_MAX) and (two_theta>THETA_MIN)):
 						if (space_group=="SG194"): #if hex, output hkil
 							pattern.append([two_theta,h,k,i,l,F_X1,F_X2,F_Y1,F_Y2,F_Z1,F_Z2,I,d])
@@ -647,8 +665,10 @@ outputfile=1				#output scattering factors & peak list to file
 outputlist=1				#print a summary list of peaks to the tty
 outputlistverbose=1			#print the ENTIRE list of peaks to the tty
 outputsites=1				#print which elements are on which sites to tty
-search_xyz=0				#search over x/y/z parameter 
-search_sites=0				#try switching site assignments [can take a while]
+
+#discontinued functions, for now
+#search_xyz=0				#search over x/y/z parameter 
+#search_sites=0				#try switching site assignments [can take a while]
 
 #Where are the elements? site X has [element,site,occupancy]
 #if e.g., X1 and X2 elements share a site, take care that total occupancy isn't > 1
@@ -657,11 +677,38 @@ X1 = [Co,Sites.c8,0.5]    		#2 atoms			#set as SG225 structure!
 X2 = [Co,Sites.c8,0.5] 			#2 atoms
 Y1 = [Fe,Sites.b4,0.5]			#1 atom
 Y2 = [Fe,Sites.b4,0.5]			#1 atom
-Z1 = [Ge,Sites.a4,0.5]			#1 atom
-Z2 = [Ge,Sites.a4,0.5]			#1 atom
+Z1 = [Ge,Sites.a4,0.75]			#1 atom
+Z2 = [Fe,Sites.a4,0.25]			#1 atom
 
- 
-Pattern(X1,X2,Y1,Y2,Z1,Z2,plot,outputfile,outputsites)	
+#Sanity check: need X, Y, and Z total occupancies less than 1, not negative
+#Partial occupancy is OK. But you know this, so we are just double checking.
+
+if ((X1[2]+X2[2]) > 1.0):
+	print("!!! Invalid X site occupancy, X1 + X2 > 1.")
+elif ((X1[2]<0) or (X2[2] < 0)):
+	print("!!! Invalid X site occupancy, X1 or X2 < 0.")
+elif ((Y1[2]+Y2[2]) > 1.0):
+	print("!!! Invalid Y site occupancy, Y1 + Y2 > 1.")
+elif ((Y1[2]<0) or (Y2[2] < 0)):
+	print("!!! Invalid Y site occupancy, Y1 or Y2 < 0.")	
+elif ((Z1[2]+Z2[2]) > 1.0):
+	print("!!! Invalid Z site occupancy, Z1 + Z2 > 1.")
+elif ((Z1[2]<0) or (Z2[2] < 0)):
+	print("!!! Invalid Z site occupancy, Z1 or Z2 < 0")	
+else:
+	Pattern(X1,X2,Y1,Y2,Z1,Z2,plot,outputfile,outputsites)	
+
+X1tot = (len(X1[1])-1)*X1[2] 
+X2tot = (len(X2[1])-1)*X2[2]
+Y1tot = (len(Y1[1])-1)*Y1[2] 
+Y2tot = (len(Y2[1])-1)*Y2[2]
+Z1tot = (len(Z1[1])-1)*Z1[2] 
+Z2tot = (len(Z2[1])-1)*Z2[2]
+
+#Another sanity check - explicitly count the atoms up 
+
+print("Composition used (X1 X2 Y1 Y2 Z1 Z2)")
+print(elements[str(X1[0])],X1tot,elements[str(X2[0])],X2tot,elements[str(Y1[0])],Y1tot,elements[str(Y2[0])],Y2tot,elements[str(Z1[0])],Z1tot,elements[str(Z2[0])],Z2tot)
 
 
 #todo: send SG to function rather than global. x-y-z as well.
@@ -682,8 +729,8 @@ Pattern(X1,X2,Y1,Y2,Z1,Z2,plot,outputfile,outputsites)
 # z=0
 # Sites.a4 = ['a4', (0,0,z), (0.5,0,z)]
 # 
-# X1 = [Fe,Sites.c8,1.0]   	#set as SG194 structure above! define x & z above!
-# X2 = [Fe,Sites.a4,1.0] 		#as long as X1+X2 occupancy adds up right ...
+# X1 = [Fe,Sites.c8,0.5]   	#set as SG194 structure above! define x & z above!
+# X2 = [Fe,Sites.a4,0.5] 		#as long as X1+X2 occupancy adds up right ...
 # 
 # Sites.b4 = ['b4', (0.25,0.2207,0.0206), (0.25,0.4979,0.1677), (0.25,0.7996,0.0463), (0.75,-0.2207,0.0206), (0.75,-0.4979,0.1677), (0.27,-0.7996,0.0463)]
 # 
