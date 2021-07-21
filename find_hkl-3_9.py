@@ -62,10 +62,10 @@ THETA_MIN = 5
 
 #wavelength and corrections
 XRAY = "Cu"   	# "Co" or "Cu"; no others implemented currently
-DISPERSION = 1  #include f' and f" dispersion corrections to atomic scattering factor?
+DISPERSION = 0  #include f' and f" dispersion corrections to atomic scattering factor?
 				#we turn this off to compare with other software
 				
-DEBYE_WALLER = 1 		#include debye-waller correction or no 
+DEBYE_WALLER = 0 		#include debye-waller correction or no 
 SAMPLE_TYPE = SINGLE_XTAL 	# POWDER or SINGLE_XTAL, to determine Lorentz-polarization 
 FILM = 1
 THICKNESS = 19.5e-7 #in cm
@@ -254,6 +254,30 @@ ScatteringFactor = [[0 for x in range(14)] for x in range(111)]  #roentgenium
 #0-4 are a_i, 5-9 are b_i, 10 is c in analytical expansion for fo 
 #11, 12 = f', f". f' includes nuclear-Thompson and relativistic bits
 #13 = Debye-Waller, for elemental xtal
+
+ScatteringFactor[22][0] = 9.818524  #a1			#Ti
+ScatteringFactor[22][5] = 8.001879   #b1
+ScatteringFactor[22][1] = 1.522646   #a2
+ScatteringFactor[22][6] = 0.029763   #b2
+ScatteringFactor[22][2] = 1.703101   #a3
+ScatteringFactor[22][7] = 39.885423  #b3
+ScatteringFactor[22][3] = 1.768774  #a4
+ScatteringFactor[22][8] = 120.1580  #b4
+ScatteringFactor[22][4] = 7.082555   #a5
+ScatteringFactor[22][9] = 0.532405   #b5
+ScatteringFactor[22][10] = 0.102473 #c
+
+if (XRAY=="Co"):
+	ScatteringFactor[22][11] = -0.15370  #f'
+	ScatteringFactor[22][12] = 2.3142*1j #f"
+elif (XRAY=="Cu"):
+	ScatteringFactor[22][11] = -0.13049
+	ScatteringFactor[22][12] = 1.8070*1j
+else: #default to Cu Ka if undefined
+	ScatteringFactor[22][11] = -0.13049
+	ScatteringFactor[22][12] = 1.8070*1j
+ScatteringFactor[22][13] = 0.5173	#B 
+#B from L.-M. Peng, G. Ren, S. L. Dudarev and M. J. Whelan @ 295K 
 
 ScatteringFactor[26][0] = 12.311098  #a1			#Fe
 ScatteringFactor[26][5] = 5.009415   #b1
