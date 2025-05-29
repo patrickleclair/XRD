@@ -58,24 +58,24 @@ THETA_MAX = 120
 THETA_MIN = 5 
 
 #wavelength and corrections
-XRAY = "Co"   	# "Co" or "Cu"; no others implemented currently
+XRAY = "Cu"   	# "Co" or "Cu"; no others implemented currently
 DISPERSION = 1  #include f' and f" dispersion corrections to atomic scattering factor?
 				#we turn this off to compare with other software
 				
 DEBYE_WALLER = 1 		#include debye-waller correction or no 
-SAMPLE_TYPE = POWDER 	# POWDER or SINGLE_XTAL, to determine Lorentz-polarization 
-FILM = 0
+SAMPLE_TYPE = SINGLE_XTAL 	# POWDER or SINGLE_XTAL, to determine Lorentz-polarization 
+FILM = 1
 THICKNESS = 19.5e-7 #in cm
 
 MU = 3031  #in 1/cm, for thickness corr.
 
 #lattice constants
-A = 7.18 #5.784 #5.22 					#a lattice constant angstroms
+A = 6.00 #5.784 #5.22 					#a lattice constant angstroms
 B = 10.97
 C = 6.37 #4.24
 
 #which space group to generate structure?
-space_group = "SG216" #SG46 SG224, SG216, SG194, SG139
+space_group = "SG225" #SG46 SG224, SG216, SG194, SG139
 
 ###############################################
 
@@ -380,6 +380,49 @@ def f(element,d):
 		#f_tot = (fo + f' + f'')*DW 
 	return (f)		#note element [12] is imaginary, so return value is complex	
 
+# general rules for a given space group on allowed hkl
+			
+def rules(h,k,l):	#general rules for allowed hkl  #are we handling permutable correctly?
+	allowed=1
+	if (space_group=="SG225" or space_group=="SG216"): #(225 and 216 have same rules)
+		if (((h+k)%2==1) or ((h+l)%2==1) or ((l+k)%2==1)):
+			allowed = 0
+		if ((h==0) and ((k%2==1) or (l%2==1))):
+			allowed=0
+		if ((h==k) and ((h+l)%2==1)):
+			allowed=0
+		if ((k==0 and l==0) and (h%2==1)):
+			allowed=0
+		if (h==0 and k==0 and l==0):
+			allowed=0
+	if (space_group=="SG224"):  
+		if ((h==0) and ((k+l)%2==1)):
+			allowed=0
+		if ((k==0 and l==0) and (h%2==1)):
+			allowed=0
+		if (h==0 and k==0 and l==0):
+			allowed=0			
+	if (space_group=="SG194"):
+		if ((h==k) and (l%2 == 1)):
+			allowed=0
+		if ((h==0 and k==0) and (l%2 == 1)):
+			allowed=0
+		if (h==0 and k==0 and l==0):
+			allowed=0
+	if (space_group=='SG139'):
+		if ((h+k+l)%2==1):
+			allowed = 0
+		if ((h==0) and ((k+l)%2==1)):
+			allowed = 0
+		if ((l==0) and ((h+k)%2==1)):
+			allowed = 0	
+		if ((h==k) and (l%2==1)):
+			allowed = 0
+		if ((h==0 and k==0) and (l%2==1)):
+			allowed = 0
+		if ((k==0 and l==0) and (h%2==1)):
+			allowed = 0
+	return(allowed)
 
 #calculate structure factor, including rules for specific sites in a space group
 
@@ -502,25 +545,30 @@ def Pattern(X1,X2,Y1,Y2,Z1,Z2,plot,outputfile,outputsites):
 					i = -(h+k) 	#fourth hexagonal index
 				else:
 					i = 0
-				F_X1 = F_hkl(X1[1],h,k,l)*X1[2] 
-				F_X2 = F_hkl(X2[1],h,k,l)*X2[2]	
-				F_Y1 = F_hkl(Y1[1],h,k,l)*Y1[2] 
-				F_Y2 = F_hkl(Y2[1],h,k,l)*Y2[2]	
-				F_Z1 = F_hkl(Z1[1],h,k,l)*Z1[2] 
-				F_Z2 = F_hkl(Z2[1],h,k,l)*Z2[2]
-				d = d_hkl(h,k,l)
-				two_theta = bragg(d,Lambda)
-				LP = Lorentz_Pol(d,Lambda)
-				if (FILM):	#thickness correction factor
-					G = 1.0-exp(-4.0*MU*THICKNESS*d/Lambda)
-				else:
-					G = 1.0 
-				I = G*LP*(absolute(F_X1*f(X1[0],d)+F_Y1*f(Y1[0],d)+F_Z1*f(Z1[0],d)+F_X2*f(X2[0],d)+F_Y2*f(Y2[0],d)+F_Z2*f(Z2[0],d)))**2
-				if ((two_theta<THETA_MAX) and (two_theta>THETA_MIN)):
-					if (space_group=="SG194"): #if hex, output hkil
-						pattern.append([two_theta,h,k,i,l,F_X1,F_X2,F_Y1,F_Y2,F_Z1,F_Z2,I,d])
-					else: #if not hex, output hkl0
-						pattern.append([two_theta,h,k,l,i,F_X1,F_X2,F_Y1,F_Y2,F_Z1,F_Z2,I,d])
+				allowed=rules(h,k,l)
+				if (allowed):
+					#e.g. 50% occupied, scale accordingly
+					#X has X[element,site,occupancy]
+					F_X1 = F_hkl(X1[1],h,k,l)*X1[2] 
+					F_X2 = F_hkl(X2[1],h,k,l)*X2[2]	
+					F_Y1 = F_hkl(Y1[1],h,k,l)*Y1[2] 
+					F_Y2 = F_hkl(Y2[1],h,k,l)*Y2[2]	
+					F_Z1 = F_hkl(Z1[1],h,k,l)*Z1[2] 
+					F_Z2 = F_hkl(Z2[1],h,k,l)*Z2[2]
+					d = d_hkl(h,k,l)
+					two_theta = bragg(d,Lambda)
+					LP = Lorentz_Pol(d,Lambda)
+					if (FILM):	#thickness correction factor
+						G = 1.0-exp(-4.0*MU*THICKNESS*d/Lambda)
+					else:
+						G = 1.0 
+					I = G*LP*(absolute(F_X1*f(X1[0],d)+F_Y1*f(Y1[0],d)+F_Z1*f(Z1[0],d)+F_X2*f(X2[0],d)+F_Y2*f(Y2[0],d)+F_Z2*f(Z2[0],d)))**2
+					if ((two_theta<THETA_MAX) and (two_theta>THETA_MIN)):
+						if (space_group=="SG194"): #if hex, output hkil
+							pattern.append([two_theta,h,k,i,l,F_X1,F_X2,F_Y1,F_Y2,F_Z1,F_Z2,I,d])
+						else: #if not hex, output hkl0
+							pattern.append([two_theta,h,k,l,i,F_X1,F_X2,F_Y1,F_Y2,F_Z1,F_Z2,I,d])
+				allowed=0
 				l+=1
 			k+=1
 			l=-lmax
@@ -658,9 +706,9 @@ def Pattern(X1,X2,Y1,Y2,Z1,Z2,plot,outputfile,outputsites):
 ######## HERE IS A BLOCK THAT YOU EDIT ########	
 
 #various output options
-plot=0  					#pop-up plot of xrd pattern
+plot=1  					#pop-up plot of xrd pattern
 plotfile=0					#save a png of the Pattern
-plotsqrt=1					#use sqrt(I) for y axis in plots
+plotsqrt=0					#use sqrt(I) for y axis in plots
 outputfile=1				#output scattering factors & peak list to file
 outputlist=1				#print a summary list of peaks to the tty
 outputlistverbose=1			#print the ENTIRE list of peaks to the tty
@@ -673,12 +721,12 @@ outputsites=1				#print which elements are on which sites to tty
 #Where are the elements? site X has [element,site,occupancy]
 #if e.g., X1 and X2 elements share a site, take care that total occupancy isn't > 1
 
-X1 = [Co,Sites.b4,1]    		#2 atoms			#set as SG224 structure!
-X2 = [Co,Sites.d4,1] 			#2 atoms
-Y1 = [Ti,Sites.a4,0.5]			#1 atom
-Y2 = [Ti,Sites.a4,0.5]			#1 atom
-Z1 = [Ga,Sites.c4,0.5]			#1 atom
-Z2 = [Ga,Sites.c4,0.5]			#1 atom
+X1 = [Ti,Sites.c8,0.5]    		#2 atoms			#set as SG225 structure!
+X2 = [Ti,Sites.c8,0.5] 			#2 atoms
+Y1 = [Co,Sites.b4,0.5]			#1 atom
+Y2 = [Co,Sites.b4,0.5]			#1 atom
+Z1 = [Si,Sites.a4,0.5]			#1 atom
+Z2 = [Si,Sites.a4,0.5]			#1 atom
 
 # Sites.c8 = ['c8', (0,0,0),(0,0.5,0)]
 # z=0
