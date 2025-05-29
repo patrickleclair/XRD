@@ -1,5 +1,5 @@
 # XRD pattern calculation for Heusler alloys and related materials
-# Copyright (C) 2018-2023  Patrick R. LeClair
+# Copyright (C) 2018-2025  Patrick R. LeClair
 # this version should work with python 3
 # 
 #     This program is free software: you can redistribute it and/or modify
